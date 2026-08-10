@@ -47,10 +47,7 @@ def stable_softmax(logits):
 # Step 6 - one_hot
 def one_hot(labels, num_classes):
     # TODO: convert integer labels into a (N, num_classes) one-hot float matrix
-    mask=np.zeros((labels.shape[0],num_classes),dtype='float64')
-    for i in range(labels.shape[0]):
-        mask[i,labels[i]]=1.0 
-    return mask
+    return np.eye(num_classes)[labels]
 
 # Step 7 - gather_true_class_probs (not yet solved)
 # TODO: implement

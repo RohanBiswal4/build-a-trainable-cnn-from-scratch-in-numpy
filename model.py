@@ -158,7 +158,6 @@ def conv2d_forward(x, weights, bias, stride, padding):
 # Step 18 - conv2d_grad_input
 def conv2d_grad_input(d_out, cache):
     # TODO: backprop d_out through the conv input using col2im
-    cols = cache['cols']
     kernel_h = cache['kernel_h']
     kernel_w = cache['kernel_w']
     padding = cache['padding']
@@ -166,28 +165,20 @@ def conv2d_grad_input(d_out, cache):
     weights = cache['weights']
     x_shape = cache['x_shape']
 
-    N, C_in, H, W = x_shape
     C_out = weights.shape[0]
 
-    # d_out:
-    # (N, C_out, out_h, out_w)
-    #
-    # Convert to:
-    # (N * out_h * out_w, C_out)
-    d_out_cols = d_out.reshape(-1, C_out)
+    # Match the row ordering produced by im2col:
+    # sample -> output row -> output column
+    d_out_cols = d_out.transpose(0, 2, 3, 1).reshape(-1, C_out)
 
-    # weights:
-    # (C_out, C_in, kernel_h, kernel_w)
-    #
-    # Convert to:
     # (C_out, C_in * kernel_h * kernel_w)
     W_col = weights.reshape(C_out, -1)
 
-    # Gradient with respect to im2col output
+    # (N*out_h*out_w, C_in*kernel_h*kernel_w)
     d_cols = d_out_cols @ W_col
 
-    # Fold columns back into image layout
-    d_x = col2im(
+    # Fold the gradient patches back into input layout
+    dx = col2im(
         d_cols,
         x_shape,
         kernel_h,
@@ -195,8 +186,7 @@ def conv2d_grad_input(d_out, cache):
         stride,
         padding
     )
-
-    return d_x
+    return dx
 
 # Step 19 - conv2d_grad_weights
 def conv2d_grad_weights(d_out, cache):

@@ -300,8 +300,12 @@ def relu_backward(d_out, cache):
     mask=np.where(cache['x']>0.0,1.0,0.0)
     return mask*d_out
 
-# Step 27 - flatten_forward (not yet solved)
-# TODO: implement
+# Step 27 - flatten_forward
+def flatten_forward(x):
+    # TODO: reshape a 4D feature map into a 2D batch matrix and cache the original shape
+    out=x.reshape(x.shape[0],-1)
+    c={'x_shape':x.shape}
+    return (out,c)
 
 # Step 28 - flatten_backward (not yet solved)
 # TODO: implement

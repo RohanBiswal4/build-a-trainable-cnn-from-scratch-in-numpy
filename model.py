@@ -342,8 +342,10 @@ def linear_grad_bias(dout):
     # TODO: Compute the bias gradient of a linear layer given upstream gradient dout.
     return np.sum(dout,axis=0)
 
-# Step 33 - linear_backward (not yet solved)
-# TODO: implement
+# Step 33 - linear_backward
+def linear_backward(dout, cache):
+    # TODO: combine input, weight, and bias gradients for a linear layer using the cache
+    return linear_grad_input(dout, cache),linear_grad_weights(x, dout),linear_grad_bias(dout)
 
 # Step 34 - softmax_cross_entropy_forward (not yet solved)
 # TODO: implement

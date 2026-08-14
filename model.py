@@ -129,7 +129,7 @@ def col2im(cols, input_shape, kernel_h, kernel_w, stride, padding):
     (N, C, H, W)=input_shape
     out_h=output_spatial_size(H, kernel_h, stride, padding)
     out_w=output_spatial_size(W, kernel_w, stride, padding)
-    image=np.zeros((N, C,out_h,out_w))
+    image=np.zeros(input_shape)
     img=pad_2d(image, padding)
     k=0
     for n in range(N):
@@ -137,10 +137,10 @@ def col2im(cols, input_shape, kernel_h, kernel_w, stride, padding):
             for j in range(out_w):
                 start_i = i * stride
                 start_j = j * stride
-                img[n, :, start_i:start_i + kernel_h,start_j:start_j + kernel_w]=cols[k].reshape(-1,kernel_h,kernel_w)
+                img[n, :, start_i:start_i + kernel_h,start_j:start_j + kernel_w]+=cols[k].reshape(-1,kernel_h,kernel_w)
                 k+=1
     if padding>0:
-        return img[N,C,1:-1,1:-1]
+        return img[:,:,padding:-padding,padding:-padding]
     return img
 
 # Step 17 - conv2d_forward (not yet solved)

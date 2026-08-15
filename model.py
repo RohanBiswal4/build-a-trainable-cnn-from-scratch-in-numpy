@@ -522,8 +522,20 @@ def shuffle_indices(n, seed=0):
     np.random.shuffle(index)
     return index
 
-# Step 54 - train_test_split (not yet solved)
-# TODO: implement
+# Step 54 - train_test_split
+import math
+def train_test_split(x, y, test_fraction=0.2, seed=0):
+    # TODO: partition x and y into train and test halves using a shared shuffled order.
+    n=len(y)
+    index=shuffle_indices(n, seed)
+    end_train=math.ceil(n*(1-test_fraction))
+    X=x[index]
+    x_train=X[:end_train]
+    label=y[index]
+    y_train=label[:end_train]
+    x_test=X[end_train:]
+    y_test=label[end_train:]
+    return (x_train, y_train, x_test, y_test)
 
 # Step 55 - iterate_minibatches (not yet solved)
 # TODO: implement

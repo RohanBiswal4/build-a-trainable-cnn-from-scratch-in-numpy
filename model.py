@@ -153,7 +153,7 @@ def conv2d_forward(x, weights, bias, stride, padding):
     Y=x_cols@ weights.reshape(weights.shape[0],-1).T + bias 
     D={'cols':x_cols, 'kernel_h':weights.shape[-2], 'kernel_w':weights.shape[-1],
      'padding':padding, 'stride':stride, 'weights':weights, 'x_shape':x.shape}
-    return Y.reshape(N,weights.shape[0],out_h,out_w),D
+    return Y.reshape(N,out_h,out_w,weights.shape[0]).transpose(0, 3, 1, 2),D
 
 # Step 18 - conv2d_grad_input
 def conv2d_grad_input(d_out, cache):
@@ -429,8 +429,16 @@ def init_lenet(in_channels, num_classes, seed=0):
     fc2=init_linear_layer(120, num_classes, seed)
     return {'conv1':conv1, 'conv2':conv2, 'fc1':fc1, 'fc2':fc2}
 
-# Step 45 - forward_conv_block (not yet solved)
-# TODO: implement
+# Step 45 - forward_conv_block
+def forward_conv_block(x, W, b, pool_size, stride, pad):
+    # TODO: run conv2d -> relu -> maxpool2d and return (out, cache_dict)
+    Y,cache=conv2d_forward(x, W, b, stride, pad)
+    Y,relu_cache=relu_forward(Y)
+    pool,pool_cache=maxpool2d_forward(Y, pool_size, pool_size)
+    cache_dict={'conv_cache':cache,
+                'relu_cache':relu_cache,
+                'pool_cache':pool_cache}
+    return pool,cache_dict
 
 # Step 46 - forward_classifier_block (not yet solved)
 # TODO: implement

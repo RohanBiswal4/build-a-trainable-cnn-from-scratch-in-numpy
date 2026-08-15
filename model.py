@@ -483,8 +483,18 @@ def backward_classifier_block(dlogits, cache):
     D['dx']=flatten_backward(dx, cache['flatten_cache'])
     return D
 
-# Step 50 - lenet_backward (not yet solved)
-# TODO: implement
+# Step 50 - lenet_backward
+def lenet_backward(dlogits, caches):
+    # TODO: walk classifier and conv block caches in reverse to assemble all gradients
+    D=backward_classifier_block(dlogits, caches['classifier'])
+    C={}
+    C['fc1']=D['fc1']
+    C['fc2']=D['fc2']
+    dx1,dw1,db1=backward_conv_block(D['dx'], caches['block2'])
+    C['conv2']={'dW':dw1,'db':db1}
+    dx2,dw2,db2=backward_conv_block(dx1, caches['block1'])
+    C['conv1']={'dW':dw2,'db':db2}
+    return C
 
 # Step 51 - lenet_predict (not yet solved)
 # TODO: implement

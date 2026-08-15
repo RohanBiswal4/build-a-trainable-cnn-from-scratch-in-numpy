@@ -477,10 +477,10 @@ def backward_classifier_block(dlogits, cache):
     D={}
     dx,dw,db=linear_backward(dlogits, cache['fc2_cache'])
     D['fc2']={'dW':dw,'db':db}
-    dx=relu_backward(dx, cache['relu'])
+    dx=relu_backward(dx, cache['relu_cache'])
     dx,dw,db=linear_backward(dx, cache['fc1_cache'])
     D['fc1']={'dW':dw,'db':db}
-    D['dx']=flatten_backward(dx, cache['flatten'])
+    D['dx']=flatten_backward(dx, cache['flatten_cache'])
     return D
 
 # Step 50 - lenet_backward (not yet solved)

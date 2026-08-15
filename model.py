@@ -496,8 +496,11 @@ def lenet_backward(dlogits, caches):
     C['conv1']={'dW':dw2,'db':db2}
     return C
 
-# Step 51 - lenet_predict (not yet solved)
-# TODO: implement
+# Step 51 - lenet_predict
+def lenet_predict(x, params):
+    # TODO: Return the argmax class index per sample from a LeNet forward pass.
+    y,_=lenet_forward(x, params)
+    return np.argmax(y,axis=1)
 
 # Step 52 - build_synthetic_image_dataset (not yet solved)
 # TODO: implement

@@ -345,7 +345,7 @@ def linear_grad_bias(dout):
 # Step 33 - linear_backward
 def linear_backward(dout, cache):
     # TODO: combine input, weight, and bias gradients for a linear layer using the cache
-    return linear_grad_input(dout, cache),linear_grad_weights(x, dout),linear_grad_bias(dout)
+    return linear_grad_input(dout, cache),linear_grad_weights(cache['x'], dout),linear_grad_bias(dout)
 
 # Step 34 - softmax_cross_entropy_forward
 def softmax_cross_entropy_forward(logits, y):
@@ -471,8 +471,17 @@ def backward_conv_block(dout, cache):
     dout=relu_backward(dout, cache['relu_cache'])
     return conv2d_backward(dout, cache['conv_cache'])
 
-# Step 49 - backward_classifier_block (not yet solved)
-# TODO: implement
+# Step 49 - backward_classifier_block
+def backward_classifier_block(dlogits, cache):
+    # TODO: backprop through fc2 -> relu -> fc1 -> flatten using the cached values
+    D={}
+    dx,dw,db=linear_backward(dlogits, cache['fc2_cache'])
+    D['fc2']={'dW':dw,'db':db}
+    dx=relu_backward(dx, cache['relu'])
+    dx,dw,db=linear_backward(dx, cache['fc1_cache'])
+    D['fc1']={'dW':dw,'db':db}
+    D['dx']=flatten_backward(dx, cache['flatten'])
+    return D
 
 # Step 50 - lenet_backward (not yet solved)
 # TODO: implement
